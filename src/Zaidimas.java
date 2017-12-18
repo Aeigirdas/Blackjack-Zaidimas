@@ -4,81 +4,86 @@ import java.util.Scanner;
 public class Zaidimas {
 
     public static void main(String[] args) {
-
         Scanner sc = new Scanner(System.in);
-        Kalade naujaKalade = new Kalade(1, true);
-        Zaidejas as = new Zaidejas("Zaideju");
-        Zaidejas dalintojas = new Zaidejas("Dalintojas");
-
-        as.pridetiKorta(naujaKalade.dalintiKitaKorta());
-        dalintojas.pridetiKorta(naujaKalade.dalintiKitaKorta());
-        as.pridetiKorta(naujaKalade.dalintiKitaKorta());
-        dalintojas.pridetiKorta(naujaKalade.dalintiKitaKorta());
-
-        System.out.println("Kortos padalintos\n");
-        as.spausdintiRanka(true);
-        dalintojas.spausdintiRanka(false);
-        System.out.println("\n");
-
-        boolean asBaigiau = false;
-        boolean dalintojasBaige = false;
         String ans;
+        do {
+            Kalade kalade = new Kalade(1, true);
+            Zaidejas as = new Zaidejas("Zaidejo");
+            Dalintojas dalintojas = new Dalintojas();
+            boolean asBaigiau = false;
+            boolean dalintojasBaige = false;
 
-        while (!asBaigiau || !dalintojasBaige) {
+            for (int i = 0; i < 2; i++) {
+                as.pridetiKorta(kalade.dalintiKitaKorta());
+                dalintojas.pridetiKorta(kalade.dalintiKitaKorta());
+            }
 
-            if (!asBaigiau) {
+            System.out.println("Kortos padalintos\n");
+            as.spausdintiRanka();
+            System.out.println("Rankos suma: " + as.rankosSuma());
+            System.out.println("////////////////////////////");
+            dalintojas.spausdintiRanka(true);
+            System.out.println("////////////////////////////");
+            System.out.println();
 
-                System.out.println("Ar imti dar viena korta?(T arba N)");
+            while (!asBaigiau || !dalintojasBaige) {
 
-                ans = sc.next();
+                if (!asBaigiau) {
+
+                    System.out.println("Ar imti dar viena korta?(T arba N)");
+
+                    ans = sc.next();
+                    System.out.println();
+
+                    if (ans.compareToIgnoreCase("T") == 0) {
+
+                        asBaigiau = !as.pridetiKorta(kalade.dalintiKitaKorta());
+                        as.spausdintiRanka();
+                        System.out.println("////////////////////////////");
+                    } else if (ans.compareToIgnoreCase("n") == 0) {
+                        asBaigiau = true;
+                    } else {
+                        System.out.println("Klaida");
+                        System.exit(1);
+                    }
+
+                    System.out.println(as.rankosSuma());
+                }
+
+                if (!dalintojasBaige) {
+                    if (dalintojas.rankosSuma() < 17) {
+                        System.out.println("Dalintojas traukia korta\n");
+                        dalintojasBaige = !dalintojas.pridetiKorta(kalade.dalintiKitaKorta());
+                        dalintojas.spausdintiRanka(true);
+                    } else {
+                        System.out.println("Dalintojas pasiliko");
+                        dalintojasBaige = true;
+                    }
+                }
+            }
+
+            System.out.println();
+            as.spausdintiRanka();
+            System.out.println("Rankos suma: " + as.rankosSuma());
+            System.out.println("////////////////////////////");
+            dalintojas.spausdintiRanka(false);
+            System.out.println("Rankos suma: " + dalintojas.rankosSuma());
+            System.out.println("////////////////////////////");
+
+            int manoSuma = as.rankosSuma();
+            int dalintojoSuma = dalintojas.rankosSuma();
+
+            if (manoSuma > dalintojoSuma && manoSuma <= 21 || dalintojoSuma > 21) {
                 System.out.println();
+                System.out.println("Jus laimejote!");
 
-                if (ans.compareToIgnoreCase("T") == 0) {
-
-                    asBaigiau = !as.pridetiKorta(naujaKalade.dalintiKitaKorta());
-                    as.spausdintiRanka(true);
-                }
-                else if (ans.compareToIgnoreCase("n") == 0) {
-                    asBaigiau = true;
-                } else {
-                    System.out.println("Klaida");
-                    System.exit(1);
-                }
-
-                System.out.println(as.rankosSuma());
+            } else {
+                System.out.println();
+                System.out.println("Jus pralaimejote");
             }
 
-            if (!dalintojasBaige) {
-                if (dalintojas.rankosSuma() < 17) {
-                    System.out.println("Dalintojas traukia korta\n");
-                    dalintojasBaige = !dalintojas.pridetiKorta(naujaKalade.dalintiKitaKorta());
-                    dalintojas.spausdintiRanka(false);
-                } else {
-                    System.out.println("Dalintojas pasiliko");
-                    dalintojasBaige = true;
-                }
-            }
-            System.out.println(dalintojas.rankosSuma());
-        }
-
-        System.out.println();
-
-        sc.close();
-
-        as.spausdintiRanka(true);
-        dalintojas.spausdintiRanka(true);
-
-        int manoSuma = as.rankosSuma();
-        int dalintojoSuma = dalintojas.rankosSuma();
-
-        if (manoSuma > dalintojoSuma && manoSuma <= 21 || dalintojoSuma > 21) {
-            System.out.println();
-            System.out.println("Jus laimejote!");
-
-        } else {
-            System.out.println();
-            System.out.println("Jus pralaimejote");
-        }
-
+            System.out.println("Ar norite zaisti dar karta? (T,N)");
+            ans = sc.next();
+        } while (ans.compareToIgnoreCase("T") == 0);
     }
 }

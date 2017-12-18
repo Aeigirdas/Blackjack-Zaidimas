@@ -1,83 +1,50 @@
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Kalade {
 
-    private Korta[] manoKortos;
-    private int kortuSkaicius;        //kiek kortu like kaladej
+    private ArrayList<Korta> manoKortos = new ArrayList<>();
 
-    public Kalade(){
-    
-    this(1,true);
-    
+    public Kalade() {
+
+        this(1, true);
+
     }
-    
+
     public Kalade(int kaladziuSkaicius, boolean sumaisyti) {
-
-        this.kortuSkaicius = kaladziuSkaicius * 52;
-        this.manoKortos = new Korta[this.kortuSkaicius];
-
-        int c = 0; //indeksavimui 
 
         for (int i = 0; i < kaladziuSkaicius; i++) {
 
             for (int j = 0; j < 4; j++) {
 
                 for (int n = 1; n <= 13; n++) {
-
-                    this.manoKortos[c] = new Korta(Zenklas.values()[j], n);
-                    c++;
-
+                    this.manoKortos.add(new Korta(Zenklas.values()[j], n));
                 }
 
             }
+        }
+
+        if (sumaisyti) {
+            this.sumaisyti();
+        }
+
     }
-        
-                  if(sumaisyti) {this.sumaisyti();}
-        
-        
+
+    public void sumaisyti() {
+        Collections.shuffle(manoKortos);
     }
-    
-    public void sumaisyti(){
-    
-    Random rng = new Random();
-    
-    Korta laikina;
-    int b;
-    
-    for( int i =0; i < this.kortuSkaicius; i++){
-    
-    b = rng.nextInt(this.kortuSkaicius);
-        
-    laikina = this.manoKortos[i];
-    this.manoKortos[i] = this.manoKortos[b];
-    this.manoKortos[b] = laikina;
-    
+
+    public Korta dalintiKitaKorta() {
+
+        Korta k = null;
+        if (!manoKortos.isEmpty() && manoKortos.size() > 0) {
+            k = manoKortos.get(0);
+            manoKortos.remove(0);
+            return k;
+        }
+        System.out.println("Įvyko klaida su kortos dalijimu");
+        return null;
     }
-    
-        }   
-    
-    public Korta dalintiKitaKorta(){
-    
-    Korta virsutine = this.manoKortos[0];
-    
-    
-    for (int c = 1; c < this.kortuSkaicius; c++){
-    
-    this.manoKortos[c-1] = this.manoKortos[c];
-    }
-    this.manoKortos[this.kortuSkaicius-1] = null;
-    this.kortuSkaicius--;
-    
-    return virsutine;
-    
-    
-    }
-    
-    
-    
-    
-    
-    
-    
+
 }
